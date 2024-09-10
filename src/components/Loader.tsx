@@ -1,5 +1,5 @@
 import React from 'react';
-import spinner from '../assets/spinner.gif'; // Asegúrate de que la ruta sea correcta
+import spinner from '../assets/spinner.gif'; 
 
 const Loader: React.FC = () => {
   return (

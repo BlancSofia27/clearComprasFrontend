@@ -20,7 +20,6 @@ interface PostCardProps {
     brand: string;
     color: string;
     userId: string;
-    whatsapp: string; // Añadir whatsapp al post
   };
 }
 
@@ -29,7 +28,6 @@ interface User {
   businessName: string;
   direction: string;
   whatsapp: string;
-  // otras propiedades del usuario si las hay
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
@@ -40,11 +38,8 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     imageUrl1,
     imageUrl2,
     size,
-    category,
     brand,
     userId,
-    whatsapp,
-    // Añadir whatsapp al post
   } = post;
 
   const [user, setUser] = useState<User | null>(null);
@@ -62,7 +57,13 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         setUser(userData);
       } catch (err) {
         console.error('Error fetching user:', err);
-        setError(err.message);
+
+        // Manejo del error con verificación de tipo
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
       } finally {
         setLoading(false);
       }
@@ -105,7 +106,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       <div className="h-48 mb-4">
         <Slider {...settings}>
           {images.map((img, index) => (
-            <div key={index} className="relative ">
+            <div key={index} className="relative">
               <img
                 src={img}
                 alt={`Image ${index}`}
@@ -120,9 +121,9 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         <h2 className="xl:text-lg xs:text-sm font-semibold text-center">{title}</h2>
         <div className="flex xl:flex-row justify-between xs:flex-col">
           <div>
-            <p className="text-gray-700 xl:text-xl xs:text-xs ">${price}</p>
+            <p className="text-gray-700 xl:text-xl xs:text-xs">${price}</p>
             <div className="mb-2">
-              <p className="xl:flex lg:flex  text-gray-600 xs:text-xs xs:hidden ">Talle</p>
+              <p className="xl:flex lg:flex text-gray-600 xs:text-xs xs:hidden">Talle</p>
             </div>
           </div>
           <div>
@@ -150,7 +151,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         </button>
         <button
           onClick={handleVisitLocal}
-          className="bg-green-500 hover:bg-green-700 text-white font-bold xl:p-2 xs:p-1  xs:text-xs rounded"
+          className="bg-green-500 hover:bg-green-700 text-white font-bold xl:p-2 xs:p-1 xs:text-xs rounded"
         >
           Visitar local
         </button>

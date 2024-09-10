@@ -1,20 +1,19 @@
+// Cards.tsx
 import React, { useEffect, useState } from 'react';
-import { getUserById } from '../supabaseApi'; // Asegúrate de que la ruta sea correcta
 import PostCard from './PostCard';
 import Loader from './Loader';
+import { getUserById } from '../supabaseApi';
 
-// Define la interfaz User
 interface User {
   id: string;
   businessName: string;
-  // otras propiedades que el usuario pueda tener
+  // otras propiedades del usuario
 }
 
-// Define la interfaz para cada publicación (post)
 interface Post {
   id: string;
   title: string;
-  price: string;
+  price: number;
   imageUrl: string;
   imageUrl1?: string;
   imageUrl2?: string;
@@ -25,7 +24,6 @@ interface Post {
   userId: string;
 }
 
-// Define la interfaz para las props del componente Cards
 interface CardsProps {
   posts: Post[];
 }
@@ -39,14 +37,12 @@ const Cards: React.FC<CardsProps> = ({ posts }) => {
     const fetchUsers = async () => {
       try {
         const userIds = [...new Set(posts.map(post => post.userId))];
-        const userPromises = userIds.map(id => getUserById(id)); // Usa la función getUserById
+        const userPromises = userIds.map(id => getUserById(id));
         const usersData = await Promise.all(userPromises);
         const usersMap = usersData.reduce((acc, user) => {
           acc[user.id] = user;
           return acc;
         }, {} as { [key: string]: User });
-
-        console.log('Users fetched from backend:', usersMap); // Loguea los usuarios obtenidos
 
         setUsers(usersMap);
       } catch (err) {
@@ -64,21 +60,16 @@ const Cards: React.FC<CardsProps> = ({ posts }) => {
 
   return (
     <div className="grid grid-cols-4 gap-4">
-      {posts.map(post => (
-        <PostCard
-          key={post.id}
-          title={post.title}
-          price={post.price}
-          imageUrl={post.imageUrl}
-          imageUrl1={post.imageUrl1}
-          imageUrl2={post.imageUrl2}
-          size={post.size}
-          category={post.category}
-          brand={post.brand}
-          color={post.color}
-          user={users[post.userId]} // Pasamos el usuario completo al componente PostCard
-        />
-      ))}
+      {posts.map(post => {
+        const user = users[post.userId]; // Obtén el usuario correspondiente
+        return user ? (
+          <PostCard
+            key={post.id}
+            post={post}
+             // Pasa el usuario a PostCard
+          />
+        ) : null;
+      })}
     </div>
   );
 };

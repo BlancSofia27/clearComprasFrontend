@@ -8,7 +8,7 @@ interface MyAdminCard {
   post: {
     id: string;
     title: string;
-    price: string;
+    price: number;
     imageUrl: string;
     imageUrl1?: string;
     imageUrl2?: string;
@@ -107,7 +107,7 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
       await updatePost({
         id,
         title: editedTitle,
-        price: parseFloat(editedPrice),
+        price: editedPrice,
         category: editedCategory,
         brand: editedBrand,
         color: editedColor,
@@ -236,7 +236,7 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
               <input
                 type="number"
                 value={editedPrice}
-                onChange={(e) => setEditedPrice(e.target.value)}
+                onChange={(e) => setEditedPrice(parseFloat(e.target.value))}
                 className="w-full mt-1 p-2 border border-gray-300 rounded"
               />
             </label>

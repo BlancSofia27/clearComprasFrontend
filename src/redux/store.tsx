@@ -1,5 +1,5 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
-import { Provider } from 'react-redux';
+
 
 // Crea un slice para manejar el estado de los tamaños
 const sizeSlice = createSlice({

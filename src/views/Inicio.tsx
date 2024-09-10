@@ -3,7 +3,6 @@ import SesionButton from "../components/SesionButton";
 import PostsList from "../components/PostsList";
 import PanelButton from "../components/PanelButton";
 import ProfileAuth from "../components/ProfileAuth";
-import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import Hero from "../components/Hero";
 import { ToastContainer } from "react-toastify";

@@ -36,7 +36,7 @@ const EditProfileButton: React.FC = () => {
 
   // Función para obtener los datos del usuario
   const fetchUserData = async () => {
-    if (user) {
+    if (user?.sub) {
       try {
         const userId = user.sub;
         const response = await getUserById(userId);
@@ -46,6 +46,8 @@ const EditProfileButton: React.FC = () => {
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
+    } else {
+      console.error('User ID is undefined');
     }
   };
 
@@ -79,7 +81,7 @@ const EditProfileButton: React.FC = () => {
   };
 
   const handleEdit = async () => {
-    if (user && formData) {
+    if (user?.sub) {
       setLoading(true);
       try {
         await updateUser(user.sub, formData);
@@ -102,6 +104,8 @@ const EditProfileButton: React.FC = () => {
       } finally {
         setLoading(false);
       }
+    } else {
+      console.error('User ID is undefined');
     }
   };
 

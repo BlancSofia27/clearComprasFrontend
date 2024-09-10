@@ -3,9 +3,9 @@ import header from "../assets/headerCompras.png";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getUserById } from "../supabaseApi";
 
-type HeroProps = {};
 
-const Hero = React.forwardRef<HTMLElement, HeroProps>((props, ref) => {
+
+const Hero = React.forwardRef<HTMLElement>(( props,ref) => {
   const { isAuthenticated, user } = useAuth0();
   const [showButton, setShowButton] = useState(false);
 

@@ -1,6 +1,5 @@
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import React, { useState } from "react";
 import Slider from "react-slick";
 
 
@@ -8,7 +7,7 @@ interface MyProfileCard {
   post:{
     id: string;
   title: string;
-  price: string;
+  price: number;
   imageUrl: string;
   imageUrl1?: string;
   imageUrl2?: string;
@@ -21,14 +20,12 @@ interface MyProfileCard {
 
 const MyCard: React.FC<MyProfileCard> = ({post}) =>{
   const {
-    id,
   title,
   price,
   imageUrl,
   imageUrl1,
   imageUrl2,
   size,
-  category,
   brand,
   }= post;
 

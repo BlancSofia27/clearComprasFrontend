@@ -4,11 +4,11 @@ import ProfileCard from './ProfileCard'; // O el nombre correcto si se llama MyP
 interface Post {
   id: string;
   title: string;
-  price: string;
+  price: number;
   imageUrl: string;
   imageUrl1: string;
   imageUrl2: string;
-  size: string;
+  size: string[];
   category: string;
   brand: string;
   color: string;

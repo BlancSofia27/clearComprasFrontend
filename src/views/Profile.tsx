@@ -1,25 +1,28 @@
-import React, { useEffect, useState } from "react"
-import { useParams, Link } from "react-router-dom"
-import ProfilePostsList from "../components/profileCards/ProfilePostsList"
-import Loader from "../components/Loader"
-import { getUserById } from "../supabaseApi"
+// Profile.tsx
+
+import React, { useEffect, useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import ProfilePostsList from "../components/profileCards/ProfilePostsList";
+import Loader from "../components/Loader";
+import { getUserById } from "../supabaseApi";
 
 interface User {
-  userId: string
-  email: string
-  businessName: string
-  direction: string
-  whatsapp: string
-  instagram: string
-  header: string
-  logo: string
+  userId?: string;
+  email: string;
+  businessName: string;
+  direction: string;
+  whatsapp: string;
+  instagram: string;
+  header: string;
+  logo: string;
 }
 
 const Profile: React.FC = () => {
-  const { userId } = useParams<{ userId: string }>() // Obtén el parámetro userId de la URL
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
+  const { userId } = useParams<{ userId?: string }>();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -29,14 +32,17 @@ const Profile: React.FC = () => {
           if (response) {
             setUser(response);
           } else {
-            setError('No user data found');
+            setError("No user data found");
           }
         } catch (err) {
-          setError('Error fetching user data');
-          console.error('Error fetching user data:', err);
+          setError("Error fetching user data");
+          console.error("Error fetching user data:", err);
         } finally {
           setLoading(false);
         }
+      } else {
+        setError("Invalid user ID");
+        setLoading(false);
       }
     };
 
@@ -44,15 +50,25 @@ const Profile: React.FC = () => {
   }, [userId]);
 
   if (loading) {
-    return <Loader/>
+    return <Loader />;
   }
 
   if (error) {
-    return <div className="text-center text-red-500">{error}</div>
+    return (
+      <div className="text-center text-red-500">
+        {error}
+        <button
+          onClick={() => navigate("/")}
+          className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Volver al inicio
+        </button>
+      </div>
+    );
   }
 
   if (!user) {
-    return <div className="text-center">No user data available</div>
+    return <div className="text-center">No user data available</div>;
   }
 
   return (
@@ -63,7 +79,6 @@ const Profile: React.FC = () => {
         </button>
       </Link>
       <div className="relative max-w-full mx-auto bg-white shadow-md font-semibold">
-        {/* Header */}
         <div className="p-4 relative w-full xl:h-[400px] md:h-[300px] xs:h-[200px]">
           <img
             src={user.header}
@@ -79,14 +94,16 @@ const Profile: React.FC = () => {
             />
           </div>
         </div>
-        {/* User Information */}
         <div className="p-6 xl:mt-8 md:mt-12">
           <h1 className="xl:text-3xl xs:text-md text-zinc-800 my-2">
             {user.businessName}
           </h1>
-          {user.direction ? <h3>Dirección: {user.direction}</h3> : <h3>Venta online</h3>}
+          {user.direction ? (
+            <h3>Dirección: {user.direction}</h3>
+          ) : (
+            <h3>Venta online</h3>
+          )}
           <div className="flex justify-end my-3">
-            {/* Botón de WhatsApp */}
             <a
               href={`https://wa.me/${user.whatsapp}`}
               target="_blank"
@@ -103,33 +120,12 @@ const Profile: React.FC = () => {
               </svg>
               <span className="hidden xl:block md:block">WhatsApp</span>
             </a>
-
-            {/* Botón de Instagram */}
-            <a
-              href={`https://www.instagram.com/${user.instagram}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center mx-2 rounded bg-[#E4405F] px-6 py-1 md:px-5 text-xs font-medium uppercase leading-normal text-white focus:outline-none transition duration-1000 ease-in-out transform hover:bg-white hover:text-[#E4405F]"
-            >
-              <svg
-                className="h-4 w-4 mr-1"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 448 512"
-              >
-                <path d="M224.1 141c-63.8 0-115.2 51.4-115.2 115.2s51.4 115.2 115.2 115.2 115.2-51.4 115.2-115.2-51.4-115.2-115.2-115.2zm0 198.4c-45.8 0-83.2-37.4-83.2-83.2s37.4-83.2 83.2-83.2 83.2 37.4 83.2 83.2-37.4 83.2-83.2 83.2zM379.6 92.8c-15.1 0-27.5 12.4-27.5 27.5s12.4 27.5 27.5 27.5 27.5-12.4 27.5-27.5-12.4-27.5-27.5-27.5zM224.1 0c-61.4 0-114.5 49.4-114.5 110.5v291c0 61.1 53.1 110.5 114.5 110.5s114.5-49.4 114.5-110.5v-291c0-61.1-53.1-110.5-114.5-110.5zM224.1 382.8c-45.8 0-83.2-37.4-83.2-83.2V114.4c0-45.8 37.4-83.2 83.2-83.2s83.2 37.4 83.2 83.2v185.2c0 45.8-37.4 83.2-83.2 83.2z" />
-              </svg>
-              <span className="hidden xl:block md:block">Instagram</span>
-            </a>
           </div>
         </div>
-        {/* Publicaciones del Usuario */}
-        <div className="bg-gray-100">
-          <ProfilePostsList userId={userId} />
-        </div>
+        {userId && <ProfilePostsList userId={userId} />}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

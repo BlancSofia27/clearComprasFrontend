@@ -1,93 +1,105 @@
-import React, { useState, useEffect } from "react"
-import { useParams } from "react-router-dom" // Importa useParams
-import Filters from "../Filters"
-import SearchBar from "../SearchBar"
-import ReactPaginate from "react-paginate"
-import ProfileCard from "./ProfileCard"
-import { getAllPosts } from "../../supabaseApi"
+// ProfilePostsList.tsx
 
-type SortOrder = "asc" | "desc"
+import React, { useEffect, useState } from "react";
+import { getAllPosts } from "../../supabaseApi";
+import Filters from "../Filters";
+import SearchBar from "../SearchBar";
+import ReactPaginate from "react-paginate";
+import ProfileCard from "./ProfileCard";
+
+type SortOrder = "asc" | "desc";
 
 interface Filters {
-  category: string
-  color: string
-  sortOrder: SortOrder
+  category: string;
+  color: string;
+  sortOrder: SortOrder;
 }
 
 interface Post {
-  id: string
-  title: string
-  price: number
-  imageUrl: string
-  imageUrl1?: string
-  imageUrl2?: string
-  size: string[]
-  category: string
-  brand: string
-  color: string
-  userId: string
+  id: string;
+  title: string;
+  price: number;
+  imageUrl: string;
+  imageUrl1?: string;
+  imageUrl2?: string;
+  size: string[];
+  category: string;
+  brand: string;
+  color: string;
+  userId: string;
 }
 
-const ProfilePostsList: React.FC = () => {
-  const { userId } = useParams<{ userId: string }>() // Obtén el userId de los parámetros
-  const [posts, setPosts] = useState<Post[]>([])
-  const [filteredPosts, setFilteredPosts] = useState<Post[]>([])
-  const [currentPage, setCurrentPage] = useState<number>(0)
+interface ProfilePostsListProps {
+  userId: string; // Asegúrate de definir la prop aquí
+}
+
+const ProfilePostsList: React.FC<ProfilePostsListProps> = ({ userId }) => {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [filters, setFilters] = useState<Filters>({
     category: "",
     color: "",
     sortOrder: "asc",
-  })
-  const [searchTerm, setSearchTerm] = useState<string>("")
-  const postsPerPage = 10
+  });
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const postsPerPage = 10;
 
   useEffect(() => {
-    if (userId) {
-      fetchPosts(userId)
-    }
-  }, [filters, searchTerm, userId])
+    const fetchPosts = async () => {
+      try {
+        const data = await getAllPosts({
+          userId,
+          title: searchTerm,
+          category: filters.category,
+          color: filters.color,
+          sortOrder: filters.sortOrder,
+        });
+        console.log("Fetched posts from Supabase:", data);
+
+        const posts = data.map((post) => ({
+          ...post,
+          price: post.price,
+        }));
+        setPosts(posts);
+      } catch (err) {
+        console.error("Error fetching posts from Supabase:", err);
+      }
+    };
+
+    fetchPosts();
+  }, [userId, filters, searchTerm]);
 
   useEffect(() => {
-    applyFilters()
-  }, [posts, filters, searchTerm])
-
-  const fetchPosts = async () => {
-    const { category, color, sortOrder } = filters;
-    try {
-      const data = await getAllPosts(searchTerm, category, color, sortOrder);
-      console.log("Fetched posts from Supabase:", data);
-      setPosts(data || []);
-    } catch (err) {
-      console.error("Error fetching posts from Supabase:", err);
-    }
-  };
+    applyFilters();
+  }, [posts, filters, searchTerm]);
 
   const applyFilters = () => {
-    let filtered = [...posts]
+    let filtered = [...posts];
 
     if (filters.category) {
-      filtered = filtered.filter((post) => post.category === filters.category)
+      filtered = filtered.filter((post) => post.category === filters.category);
     }
 
     if (filters.color) {
-      filtered = filtered.filter((post) => post.color === filters.color)
+      filtered = filtered.filter((post) => post.color === filters.color);
     }
 
     if (filters.sortOrder === "asc") {
-      filtered = filtered.sort((a, b) => a.price - b.price)
+      filtered = filtered.sort((a, b) => a.price - b.price);
     } else if (filters.sortOrder === "desc") {
-      filtered = filtered.sort((a, b) => b.price - a.price)
+      filtered = filtered.sort((a, b) => b.price - a.price);
     }
 
-    setFilteredPosts(filtered)
-  }
+    setFilteredPosts(filtered);
+  };
 
   const handlePageChange = (selectedItem: { selected: number }) => {
-    setCurrentPage(selectedItem.selected)
-  }
+    setCurrentPage(selectedItem.selected);
+  };
 
-  const offset = currentPage * postsPerPage
-  const currentPosts = filteredPosts.slice(offset, offset + postsPerPage)
+  const offset = currentPage * postsPerPage;
+  const currentPosts = filteredPosts.slice(offset, offset + postsPerPage);
 
   return (
     <div className="bg-gray-100 w-full flex flex-col">
@@ -95,11 +107,11 @@ const ProfilePostsList: React.FC = () => {
       <div className="flex flex-row w-auto">
         <Filters setFilters={setFilters} />
       </div>
-      <div className=" justify-center card-list grid sm:grid-cols-3 xs:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:gap-4 xl:p-4 xs:p-1">
+      <div className="justify-center card-list grid sm:grid-cols-3 xs:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:gap-4 xl:p-4 xs:p-1">
         {currentPosts.length > 0 ? (
           currentPosts.map((post) => <ProfileCard key={post.id} post={post} />)
         ) : (
-          <div className="p-20 text-center justify-center"></div>
+          <div className="p-20 text-center">No posts available</div>
         )}
       </div>
 
@@ -123,7 +135,7 @@ const ProfilePostsList: React.FC = () => {
         activeClassName="bg-blue-500 text-white rounded-lg"
       />
     </div>
-  )
-}
+  );
+};
 
-export default ProfilePostsList
+export default ProfilePostsList;
