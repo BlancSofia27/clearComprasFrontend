@@ -5,7 +5,7 @@ import { getUserById } from "../supabaseApi";
 
 
 
-const Hero = React.forwardRef<HTMLElement>(( props,ref) => {
+const Hero = React.forwardRef<HTMLElement>(( _,ref) => {
   const { isAuthenticated, user } = useAuth0();
   const [showButton, setShowButton] = useState(false);
 

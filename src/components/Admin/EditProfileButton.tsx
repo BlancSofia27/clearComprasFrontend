@@ -1,211 +1,203 @@
 import React, { useState, useEffect } from 'react';
-import Modal from 'react-modal';
+import { getUserById, updateUser } from '../../supabaseApi'; // Asegúrate de importar las funciones correctas
 import { useAuth0 } from '@auth0/auth0-react';
-import { uploadFile, deleteFile } from '../../firebase/config'; // Importar la función uploadFile y deleteFile
-import Swal from 'sweetalert2';
-import { getUserById, updateUser } from '../../supabaseApi';
-
-interface User {
-  userId: string;
-  email: string;
-  businessName: string;
-  direction: string;
-  whatsapp: string;
-  header: string;
-  logo: string;
-  instagram: string;
-}
-
-// Inicializar el modal
-Modal.setAppElement('#root');
+import { uploadFile } from '../../firebase/config'; // Asegúrate de importar la función correcta
 
 const EditProfileButton: React.FC = () => {
-  const { user } = useAuth0();
-  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
-  const [formData, setFormData] = useState<User>({
-    userId: '',
-    email: '',
-    businessName: '',
-    direction: '',
-    whatsapp: '',
+  const [profileData, setProfileData] = useState({
     header: '',
     logo: '',
-    instagram: ''
+    instagram: '',
+    businessName: '',
+    direction: '',
+    whatsapp: ''
   });
-  const [loading, setLoading] = useState<boolean>(false);
-
-  // Función para obtener los datos del usuario
-  const fetchUserData = async () => {
-    if (user?.sub) {
-      try {
-        const userId = user.sub;
-        const response = await getUserById(userId);
-        if (response) {
-          setFormData(response);
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    } else {
-      console.error('User ID is undefined');
-    }
-  };
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState('');
+  const [headerFile, setHeaderFile] = useState<File | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [headerPreview, setHeaderPreview] = useState<string | ArrayBuffer | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | ArrayBuffer | null>(null);
+  const { user } = useAuth0();
+  const userId = user?.sub;
 
   useEffect(() => {
-    if (modalIsOpen) {
-      fetchUserData();
+    if (userId) {
+      const fetchProfileData = async () => {
+        try {
+          const data = await getUserById(userId);
+          setProfileData(data);
+          setHeaderPreview(data.header);
+          setLogoPreview(data.logo);
+        } catch (err) {
+          setError('Error al cargar los datos del perfil');
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchProfileData();
     }
-  }, [modalIsOpen]);
+  }, [userId]);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, fieldName: keyof User) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-
-      // Eliminar el archivo existente si se cambia
-      if (formData[fieldName]) {
-        await deleteFile(formData[fieldName]);
-      }
-
-      try {
-        const url = await uploadFile(file); // Usa la función uploadFile
-        setFormData(prevData => ({ ...prevData, [fieldName]: url }));
-      } catch (err) {
-        console.error('Error uploading file:', err);
-      }
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prevData => ({ ...prevData, [name]: value }));
+    setProfileData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
   };
 
-  const handleEdit = async () => {
-    if (user?.sub) {
-      setLoading(true);
-      try {
-        await updateUser(user.sub, formData);
-        Swal.fire({
-          title: "¡Actualizado!",
-          text: "El perfil se ha actualizado correctamente.",
-          icon: "success",
-          timer: 3000,
-          showConfirmButton: false
-        });
-        setModalIsOpen(false);
-        setTimeout(() => window.location.reload(), 3000);
-      } catch (err) {
-        Swal.fire({
-          title: "Error",
-          text: "Hubo un problema al actualizar el perfil.",
-          icon: "error"
-        });
-        console.error('Error updating profile:', err);
-      } finally {
-        setLoading(false);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'header' | 'logo') => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (type === 'header') {
+          setHeaderPreview(reader.result);
+        } else if (type === 'logo') {
+          setLogoPreview(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+      if (type === 'header') {
+        setHeaderFile(file);
+      } else if (type === 'logo') {
+        setLogoFile(file);
       }
-    } else {
-      console.error('User ID is undefined');
     }
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setModalContent('¿Estás seguro de que quieres guardar los cambios?');
+    setIsModalOpen(true);
+  };
+
+  const handleConfirm = async () => {
+    try {
+      let updatedProfileData = { ...profileData };
+      
+      if (headerFile) {
+        const headerUrl = await uploadFile(headerFile);
+        updatedProfileData.header = headerUrl;
+      }
+      
+      if (logoFile) {
+        const logoUrl = await uploadFile(logoFile);
+        updatedProfileData.logo = logoUrl;
+      }
+
+      await updateUser(userId, updatedProfileData);
+      setModalContent('¡Cambios guardados exitosamente!');
+      setTimeout(() => {
+        setIsModalOpen(false);
+      }, 3000); // Cierra el modal después de 2 segundos
+    } catch (err) {
+      setError('Error al guardar los cambios');
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div>
       <button
-        onClick={() => setModalIsOpen(true)}
-        className="xl:px-4 xl:py-2 xs:p-2 xs:text-xs xl:text-md my-2 bg-blue-500 text-white rounded-lg"
+        onClick={() => setIsModalOpen(true)}
+        className="bg-blue-500 text-white px-4 py-2 rounded"
       >
-        Editar datos
+        Editar Perfil
       </button>
 
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        contentLabel="Edit Profile"
-        className="bg-white p-2 rounded-lg shadow-lg max-w-3xl mx-auto my-20 xl:h-[600px] xs:w-[320px] xs:h-[800px]"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-      >
-        <div className="flex h-full w-full">
-          {/* Contenido del formulario */}
-          <div className="w-full p-4 overflow-y-auto">
-            <h2 className="text-2xl font-semibold mb-4">Editar Perfil</h2>
-            <form className="flex flex-col gap-4">
-              <label className="flex flex-col mb-4">
-                Header:
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleFileChange(e, 'header')}
-                  className="border p-2 rounded"
-                />
-                {formData.header && <img src={formData.header} alt="Header preview" className="mt-2 max-w-full h-auto" />}
-              </label>
-              <label className="flex flex-col mb-4">
-                Logo:
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleFileChange(e, 'logo')}
-                  className="border p-2 rounded"
-                />
-                {formData.logo && <img src={formData.logo} alt="Logo preview" className="mt-2 max-w-full h-auto" />}
-              </label>
-              <label className="flex flex-col mb-4">
-                Nombre del Negocio:
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h2 className="text-lg font-bold mb-4">Editar Perfil</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label htmlFor="businessName" className="block text-sm font-medium">Nombre del Negocio:</label>
                 <input
                   type="text"
+                  id="businessName"
                   name="businessName"
-                  placeholder="Nombre del Negocio"
-                  value={formData.businessName}
-                  onChange={handleInputChange}
-                  className="border p-2 rounded"
+                  value={profileData.businessName}
+                  onChange={handleChange}
+                  className="border border-gray-300 p-2 rounded w-full"
                 />
-              </label>
-              <label className="flex flex-col mb-4">
-                Dirección del Negocio:
+              </div>
+              <div className="mb-4">
+                <label htmlFor="direction" className="block text-sm font-medium">Dirección:</label>
                 <input
                   type="text"
+                  id="direction"
                   name="direction"
-                  placeholder="Dirección del negocio"
-                  value={formData.direction}
-                  onChange={handleInputChange}
-                  className="border p-2 rounded"
+                  value={profileData.direction}
+                  onChange={handleChange}
+                  className="border border-gray-300 p-2 rounded w-full"
                 />
-              </label>
-              <label className="flex flex-col mb-4">
-                WhatsApp:
+              </div>
+              <div className="mb-4">
+                <label htmlFor="whatsapp" className="block text-sm font-medium">WhatsApp:</label>
                 <input
                   type="text"
+                  id="whatsapp"
                   name="whatsapp"
-                  placeholder="WhatsApp"
-                  value={formData.whatsapp}
-                  onChange={handleInputChange}
-                  className="border p-2 rounded"
+                  value={profileData.whatsapp}
+                  onChange={handleChange}
+                  className="border border-gray-300 p-2 rounded w-full"
                 />
-              </label>
-              <label className="flex flex-col mb-4">
-                Instagram:
+              </div>
+              <div className="mb-4">
+                <label htmlFor="header" className="block text-sm font-medium">Header:</label>
                 <input
-                  type="text"
-                  name="instagram"
-                  placeholder="Instagram"
-                  value={formData.instagram}
-                  onChange={handleInputChange}
-                  className="border p-2 rounded"
+                  type="file"
+                  id="header"
+                  onChange={(e) => handleImageChange(e, 'header')}
+                  className="border border-gray-300 p-2 rounded w-full"
                 />
-              </label>
-              <button
-                type="button"
-                onClick={handleEdit}
-                className={`px-4 py-2 bg-blue-500 text-white rounded-lg ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={loading}
-              >
-                {loading ? 'Guardando...' : 'Guardar Cambios'}
-              </button>
+                {headerPreview && (
+                  <img src={headerPreview as string} alt="Header Preview" className="mt-2 w-full h-32 object-cover" />
+                )}
+              </div>
+              <div className="mb-4">
+                <label htmlFor="logo" className="block text-sm font-medium">Logo:</label>
+                <input
+                  type="file"
+                  id="logo"
+                  onChange={(e) => handleImageChange(e, 'logo')}
+                  className="border border-gray-300 p-2 rounded w-full"
+                />
+                {logoPreview && (
+                  <img src={logoPreview as string} alt="Logo Preview" className="mt-2 w-full h-32 object-cover" />
+                )}
+              </div>
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="submit"
+                  onClick={handleConfirm}
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                  Guardar cambios
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="bg-gray-500 text-white px-4 py-2 rounded"
+                >
+                  Cancelar
+                </button>
+              </div>
             </form>
           </div>
         </div>
-      </Modal>
+      )}
     </div>
   );
 };

@@ -94,8 +94,10 @@ const PostsList: React.FC = () => {
       <div className="justify-center card-list grid sm:grid-cols-3 xs:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:gap-4 xl:p-4 xs:p-1">
         {currentPosts.length > 0 ? (
           currentPosts.map((post) => <PostCard key={post.id} post={post} />)
-        ) : (
-          <div className="p-20 text-center justify-center">No posts found</div>
+        ) : (<>
+          <div className="w-full text-end px-2 py-24 font-bold">No se encontraron</div>
+          <div className="w-full text-start py-24 font-bold">coincidencias</div>
+          </>
         )}
       </div>
 

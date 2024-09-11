@@ -44,11 +44,12 @@ const ProfileAuth: React.FC = () => {
         />
         <div className="flex flex-col mx-3 text-start">
           <h2 className="xl:text-md xs:text-xs">{user.name}</h2>
+          <h2 className="xl:text-md xs:text-xs">{user.email}</h2>
           <div className="flex items-center">
             <h1 className="xl:text-md xs:text-xs">ID: {user.sub}</h1>
-            <button onClick={copyToClipboard} className="ml-2">
+            <button onClick={copyToClipboard} className="xl:ml-2 xs:w-6 xl:w-9">
               <img src={copy}
-              className="h-7"
+              className=""
               alt="copiar id" />
             </button>
           </div>

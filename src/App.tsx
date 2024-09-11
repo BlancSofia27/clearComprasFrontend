@@ -8,7 +8,6 @@ import {
 import Inicio from "./views/Inicio"
 import AdminPanel from "./views/AdminPanel"
 import PostForm from "./views/postForm"
-
 import ProtectedRoute from "./components/ProtectedRoute"
 import Profile from "./views/Profile"
 
