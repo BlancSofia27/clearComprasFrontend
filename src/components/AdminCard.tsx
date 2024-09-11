@@ -174,7 +174,7 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
   };
 
   return (
-    <div className="flex flex-col xl:w-[220px] xl:h-[550px] xs:w-[150px] xs:h-[300px] max-w-sm m-4 bg-white shadow-md rounded-md overflow-hidden">
+    <div className="flex flex-col xl:w-[220px] xl:h-[510px] xs:w-[150px] xs:h-[300px] max-w-sm m-4 bg-white shadow-md rounded-md overflow-hidden">
       <div className="relative">
         <Slider {...settings}>
           {images.map((image, index) => (
@@ -182,25 +182,40 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
               <img
                 src={image}
                 alt={`Product Image ${index + 1}`}
-                className="object-cover w-full h-56"
+                className="object-cover w-full xl:h-56 xs:h-36"
               />
             </div>
           ))}
         </Slider>
       </div>
-      <div className="p-4">
-        <h3 className="text-lg font-bold">{title}</h3>
+      <div className="xl:p-4 xs:p-2 xl:text-md xs:text-sm xs:mt-3">
+        <div className="xl:h-14 xs:h-10 xl:text-lg font-bold text-center mt-2">{title}</div>
         <p className="text-gray-600">${price}</p>
-        <div className="mt-2">
+        <p className="xs:hidden xl:flex text-gray-600 ">{category}</p>
+        <div className="mb-2">
+          <p className="xs:hidden xl:flex text-gray-600 mb-2 ">Talle</p>
+          <div className="flex flex-wrap gap-2">
+            {size.map((s, index) => (
+              <span
+                key={index}
+                className="bg-gray-200 text-gray-700 px-2 py-1 rounded"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
+        <p className="xs:hidden xl:flex text-gray-600">Color:{color}</p>
+        <div className="xs:text-xs xl:text-sm mt-2 flex flex-row justify-between">
           <button
             onClick={() => setModalIsOpen(true)}
-            className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+            className="bg-blue-500 text-white xl:px-4 xl:py-1 xs:px-2 rounded mr-2"
           >
             Editar
           </button>
           <button
             onClick={handleDelete}
-            className="bg-red-500 text-white px-4 py-2 rounded"
+            className="bg-red-500 text-white xl:px-4 xl:py-1 xs:px-2  rounded"
           >
             Eliminar
           </button>

@@ -61,8 +61,11 @@ const MyCard: React.FC<MyProfileCard> = ({post}) =>{
       </div>
 
       <div className="p-4 xl:mt-[180px] xs:mt-2">
-        <h2 className="text-center xl:text-xl xs:text-sm font-semibold mb-2">{title}</h2>
-        <p className="text-gray-700 text-lg mb-2">${price}</p>
+        <h2 className="xl:h-14 xs:h-10 text-center xl:text-xl xs:text-sm font-semibold mb-2">{title}</h2>
+        <div className="flex xl:flex-row xs:flex-col justify-between xs:text-md xl:text-lg">
+        <p className="text-gray-700 xl:mb-2">${price}</p>
+        <p className="text-gray-600 xl:mb-2 xs:h-12 xl:h-8 ">Marca: {brand}</p>
+        </div>
         <div className="mb-2">
           <p className="text-gray-600 mb-2">Talle</p>
           <div className="flex flex-wrap gap-2">
@@ -76,7 +79,6 @@ const MyCard: React.FC<MyProfileCard> = ({post}) =>{
             ))}
           </div>
         </div>
-        <p className="text-gray-600 mb-2 xs:text-xs xl:text-md">Marca: {brand}</p>
       </div>
     </div>
   );
