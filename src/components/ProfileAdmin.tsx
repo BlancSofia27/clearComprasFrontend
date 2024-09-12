@@ -60,7 +60,7 @@ const Profile: React.FC = () => {
   }
 
   return (
-    <div className="relative max-w-full mx-auto bg-slate text-gray-800 shadow-md rounded-lg">
+    <div className="relative max-w-full mx-auto bg-slate text-gray-800 shadow-md ">
       {/* Header */}
       <div className="relative w-full xl:h-[400px] xs:h-[150px] ">
         <img

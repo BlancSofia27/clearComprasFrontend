@@ -98,102 +98,108 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const images = [imageUrl, imageUrl1, imageUrl2].filter(Boolean) as string[];
 
   return (
-    <div className="flex flex-col xs:w-[160px] xl:w-[300px] xl:h-[600px] mx-auto my-4 bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="bg-gray-100 text-center font-semibold xl:p-2 xl:text-sm xs:text-xs">
-        {user?.businessName || "Nombre del negocio"}
-        <h3>{user?.direction || "Venta Online"}</h3>
+    <div className="flex flex-col xs:w-[160px] xl:w-[300px] xl:h-[590px] mx-auto my-4 bg-white shadow-lg rounded-lg overflow-hidden">
+  <div className="bg-gray-100 text-center font-semibold xl:p-2 xl:text-sm xs:text-xs p-1">
+    {user?.businessName || "Nombre del negocio"}
+    <h3>{user?.direction || "Venta Online"}</h3>
+  </div>
+
+  {/* Contenedor de la imagen */}
+  <div className="relative h-48 mb-4">
+    <Slider {...settings}>
+      {images.map((img, index) => (
+        <div key={index} className="relative">
+          <img
+            src={img}
+            alt={`Image ${index}`}
+            className="w-full xl:h-[320px] xs:h-[200px] object-cover"
+          />
+        </div>
+      ))}
+    </Slider>
+
+    {/* Botones posicionados al final de la imagen */}
+    <div className="absolute  left-0 right-0 flex justify-between xl:text-md xs:text-xs p-2">
+      <button
+        onClick={() => setModalIsOpen(true)}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold xl:p-2 xs:p-1 rounded"
+      >
+        Consultar
+      </button>
+      <button
+        onClick={handleVisitLocal}
+        className="bg-green-500 hover:bg-green-700 text-white font-bold xl:p-2 xs:p-1 rounded"
+      >
+        Visitar local
+      </button>
+    </div>
+  </div>
+
+  <div className="flex flex-col mx-4 h-1/3 xl:mt-[150px] xs:mt-5 justify-start">
+    <div className="flex items-center xl:text-lg xs:text-sm font-semibold text-center justify-center h-12 my-2 w-full">
+      {title}
+    </div>
+
+    <div className="flex xl:flex-row justify-between xs:flex-col">
+      <div>
+        <p className="text-gray-700 xl:text-xl xs:text-xs">${price}</p>
+        <div className="mb-2">
+          <p className="xl:flex lg:flex text-gray-600 xs:text-xs xs:hidden">Talle</p>
+        </div>
       </div>
-      <div className="h-48 mb-4">
+      <div>
+        <p className="text-gray-600 sm:text-sm lg:text-md xl:text-md xl:m-2 xs:text-xs mb-2">Marca: {brand}</p>
+      </div>
+    </div>
+
+    {/* Contenedor de tallas con overflow-y-auto */}
+    <div className="flex flex-row gap-2 xl:text-md xl:m-1 xs:text-xs h-auto mb-3 overflow-x-auto scrollbar-hide">
+  {size.map((s, index) => (
+    <span
+      key={index}
+      className="bg-gray-200 text-gray-700 rounded p-2 text-center flex items-center justify-center whitespace-nowrap"
+    >
+      {s}
+    </span>
+  ))}
+</div>
+  </div>
+
+  {/* Modal para compartir */}
+  <Modal
+    isOpen={modalIsOpen}
+    onRequestClose={() => setModalIsOpen(false)}
+    contentLabel="Compartir Producto"
+    className="bg-white p-5 rounded-lg shadow-lg max-w-2xl mx-auto my-20 xl:h-[600px] xs:w-[340px] xs:h-[620px]"
+    overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+  >
+    <h2 className="text-2xl font-semibold text-center">Consultar al Comercio</h2>
+    <div className="flex flex-col items-center">
+      <div className="w-full mb-4">
         <Slider {...settings}>
           {images.map((img, index) => (
             <div key={index} className="relative">
               <img
                 src={img}
                 alt={`Image ${index}`}
-                className="w-full xl:h-[320px] xs:h-[200px] object-cover"
+                className="w-full h-[400px] object-cover"
               />
             </div>
           ))}
         </Slider>
       </div>
-
-      <div className="flex flex-col mx-4 h-1/3 overflow-y-auto xl:mt-[150px] xs:mt-5 justify-start">
-      <div className="flex items-center xl:text-lg xs:text-sm font-semibold text-center justify-center h-12 w-full">
-  {title}
+      <h3 className="text-xl font-semibold m-4">{title}</h3>
+      <button
+        onClick={handleShare}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded"
+      >
+        Enviar Mensaje
+      </button>
+    </div>
+  </Modal>
 </div>
 
-        <div className="flex xl:flex-row justify-between xs:flex-col">
-          <div>
-            <p className="text-gray-700 xl:text-xl xs:text-xs">${price}</p>
-            <div className="mb-2">
-              <p className="xl:flex lg:flex text-gray-600 xs:text-xs xs:hidden">Talle</p>
-            </div>
-          </div>
-          <div>
-            <p className="text-gray-600 sm:text-sm lg:text-md xl:text-md xl:m-2 xs:text-xs mb-2">Marca: {brand}</p>
-          </div>
-        </div>
-        <div className="flex flex-row gap-2 xl:text-md xl:m-1 xs:text-xs">
-          {size.map((s, index) => (
-            <span
-              key={index}
-              className="bg-gray-200 text-gray-700 xl:px-2 xl:py-1 rounded p-1"
-            >
-              {s}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div className="xl:p-4 flex justify-between xl:text-md xs:text-xs xs:p-2">
-        <button
-          onClick={() => setModalIsOpen(true)} // Abrir modal
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold xl:p-2 xs:p-1 xs:text-xs rounded"
-        >
-          Consultar
-        </button>
-        <button
-          onClick={handleVisitLocal}
-          className="bg-green-500 hover:bg-green-700 text-white font-bold xl:p-2 xs:p-1 xs:text-xs rounded"
-        >
-          Visitar local
-        </button>
-      </div>
-
-      {/* Modal para compartir */}
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        contentLabel="Compartir Producto"
-        className="bg-white p-5 rounded-lg shadow-lg max-w-2xl mx-auto my-20 xl:h-[600px] xs:w-[340px] xs:h-[620px]"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-      >
-        <h2 className="text-2xl font-semibold  text-center">Consultar al Comercio</h2>
-        <div className="flex flex-col items-center">
-          <div className="w-full mb-4">
-            <Slider {...settings}>
-              {images.map((img, index) => (
-                <div key={index} className="relative">
-                  <img
-                    src={img}
-                    alt={`Image ${index}`}
-                    className="w-full h-[400px] object-cover"
-                  />
-                </div>
-              ))}
-            </Slider>
-          </div>
-          <h3 className="text-xl font-semibold m-4">{title}</h3>
-          <button
-            onClick={handleShare}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4  rounded"
-          >
-            Enviar Mensaje
-          </button>
-        </div>
-      </Modal>
-    </div>
-  );
+  )
 };
 
 export default PostCard;

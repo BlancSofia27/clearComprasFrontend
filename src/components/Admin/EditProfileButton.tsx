@@ -1,21 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { getUserById, updateUser } from '../../supabaseApi'; 
+import { getUserById, updateUser } from '../../supabaseApi';
 import { useAuth0 } from '@auth0/auth0-react';
 import { uploadFile } from '../../firebase/config';
 import Swal from 'sweetalert2';
 import Loader from '../Loader';
 
-interface ProfileData {
-  header: string;
-  logo: string;
-  instagram: string;
-  businessName: string;
-  direction: string;
-  whatsapp: string;
-}
-
 const EditProfileButton: React.FC = () => {
-  const [profileData, setProfileData] = useState<ProfileData>({
+  const [profileData, setProfileData] = useState({
     header: '',
     logo: '',
     instagram: '',
@@ -105,17 +96,14 @@ const EditProfileButton: React.FC = () => {
         setError('Error: No se pudo obtener el ID del usuario.');
       }
 
-      
-      
-      
       Swal.fire({
-        title: "¡Actualizado!",
-        text: "El perfil se ha actualizado correctamente.",
-        icon: "success",
+        title: '¡Actualizado!',
+        text: 'El perfil se ha actualizado correctamente.',
+        icon: 'success',
         timer: 3000,
-        showConfirmButton: false
+        showConfirmButton: false,
       });
-      
+
       setIsModalOpen(false);
 
       setTimeout(() => window.location.reload(), 3000);
@@ -128,7 +116,7 @@ const EditProfileButton: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  if (loading) return <Loader/>;
+  if (loading) return <Loader />;
   if (error) return <p>{error}</p>;
 
   return (
@@ -142,7 +130,7 @@ const EditProfileButton: React.FC = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-full w-[95%] xs:w-[340px] xl:w-[900px] h-auto xs:h-[600px] xl:h-[600px] overflow-y-auto xl:overflow-hidden m-4">
             <h2 className="text-lg font-bold mb-4">Editar Perfil</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
@@ -153,7 +141,7 @@ const EditProfileButton: React.FC = () => {
                   name="businessName"
                   value={profileData.businessName}
                   onChange={handleChange}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-1 rounded w-full"
                 />
               </div>
 
@@ -165,7 +153,7 @@ const EditProfileButton: React.FC = () => {
                   name="instagram"
                   value={profileData.instagram}
                   onChange={handleChange}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-1 rounded w-full"
                 />
               </div>
 
@@ -177,42 +165,54 @@ const EditProfileButton: React.FC = () => {
                   name="direction"
                   value={profileData.direction}
                   onChange={handleChange}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-1 rounded w-full"
                 />
               </div>
 
               <div className="mb-4">
-                <label htmlFor="whatsapp" className="block text-sm font-medium">WhatsApp:(ej +543442457109)</label>
+                <label htmlFor="whatsapp" className="block text-sm font-medium">WhatsApp:</label>
                 <input
                   type="text"
                   id="whatsapp"
                   name="whatsapp"
                   value={profileData.whatsapp}
                   onChange={handleChange}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="border border-gray-300 p-1 rounded w-full"
                 />
               </div>
 
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Logo:(Recomendado 200x200px)</label>
+              <div className="mb-4 flex flex-col xs:flex-col xl:flex-row gap-4">
+                <label className="block text-sm font-medium">Logo: (Recomendado 200x200px)</label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={(e) => handleImageChange(e, 'logo')}
                   className="mt-2"
                 />
-                {logoPreview && <img src={logoPreview as string} alt="Logo preview" className="mt-2 w-20 h-20 object-cover" />}
+                {logoPreview && (
+                  <img
+                    src={logoPreview as string}
+                    alt="Logo preview"
+                    className="mt-2 w-20 h-20 object-cover"
+                  />
+                )}
               </div>
 
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Header:(Recomendado 1300x400px)</label>
+              <div className="mb-4 flex flex-col xs:flex-col xl:flex-row gap-4">
+                <label className="block text-sm font-medium">Header: (Recomendado 1300x400px)</label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={(e) => handleImageChange(e, 'header')}
                   className="mt-2"
                 />
-                {headerPreview && <img src={headerPreview as string} alt="Header preview" className="mt-2 w-full h-20 object-cover" />}
+                {headerPreview && (
+                  <img
+                    src={headerPreview as string}
+                    alt="Header preview"
+                    className="mt-2 w-full h-20 object-cover"
+                  />
+                )}
               </div>
 
               <div className="flex justify-end space-x-2">
