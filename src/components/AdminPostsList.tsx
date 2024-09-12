@@ -105,7 +105,10 @@ const AdminPostsList: React.FC = () => {
         {currentPosts.length > 0 ? (
           currentPosts.map((post) => <AdminCard key={post.id} post={post} />)
         ) : (
-          <div className="p-20 text-center justify-center">No posts found</div>
+          <>
+          <div className="w-full text-end px-2 py-24 font-bold">Acá vas a poder</div>
+          <div className="w-full text-start py-24 font-bold">visualizar tu stock.</div>
+          </>
         )}
       </div>
 

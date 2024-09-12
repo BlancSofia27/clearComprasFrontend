@@ -1,6 +1,5 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import Loader from "./Loader";
 import copy from "../assets/copy.svg"; // Asegúrate de que la ruta sea correcta
 import { toast, Flip } from 'react-toastify'; // Corrige el import
 import 'react-toastify/dist/ReactToastify.css'; // Importa los estilos necesarios
@@ -31,7 +30,7 @@ const ProfileAuth: React.FC = () => {
   };
 
   if (isLoading) {
-    return <Loader />;
+    return <div></div>;
   }
 
   return (

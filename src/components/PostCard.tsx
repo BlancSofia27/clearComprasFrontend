@@ -118,7 +118,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       </div>
 
       <div className="flex flex-col mx-4 h-1/3 overflow-y-auto xl:mt-[150px] xs:mt-5 justify-start">
-        <h2 className="xl:text-lg xs:text-sm font-semibold text-center">{title}</h2>
+      <div className="flex items-center xl:text-lg xs:text-sm font-semibold text-center justify-center h-12 w-full">
+  {title}
+</div>
+
         <div className="flex xl:flex-row justify-between xs:flex-col">
           <div>
             <p className="text-gray-700 xl:text-xl xs:text-xs">${price}</p>
@@ -134,7 +137,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           {size.map((s, index) => (
             <span
               key={index}
-              className="bg-gray-200 text-gray-700 xl:px-2 xl:py-1 rounded"
+              className="bg-gray-200 text-gray-700 xl:px-2 xl:py-1 rounded p-1"
             >
               {s}
             </span>
@@ -162,10 +165,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
         contentLabel="Compartir Producto"
-        className="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto my-20 xl:h-[600px] xs:w-[340px]"
+        className="bg-white p-5 rounded-lg shadow-lg max-w-2xl mx-auto my-20 xl:h-[600px] xs:w-[340px] xs:h-[620px]"
         overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       >
-        <h2 className="text-2xl font-semibold mb-4 text-center">Consultar al Comercio</h2>
+        <h2 className="text-2xl font-semibold  text-center">Consultar al Comercio</h2>
         <div className="flex flex-col items-center">
           <div className="w-full mb-4">
             <Slider {...settings}>
@@ -180,10 +183,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               ))}
             </Slider>
           </div>
-          <h3 className="text-xl font-semibold mb-4">{title}</h3>
+          <h3 className="text-xl font-semibold m-4">{title}</h3>
           <button
             onClick={handleShare}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4  rounded"
           >
             Enviar Mensaje
           </button>

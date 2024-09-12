@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { getUserById, updateUser } from '../../supabaseApi'; // Asegúrate de importar las funciones correctas
+import { getUserById, updateUser } from '../../supabaseApi'; 
 import { useAuth0 } from '@auth0/auth0-react';
-import { uploadFile } from '../../firebase/config'; // Asegúrate de importar la función correcta
+import { uploadFile } from '../../firebase/config';
+import Swal from 'sweetalert2';
+import Loader from '../Loader';
+
+interface ProfileData {
+  header: string;
+  logo: string;
+  instagram: string;
+  businessName: string;
+  direction: string;
+  whatsapp: string;
+}
 
 const EditProfileButton: React.FC = () => {
-  const [profileData, setProfileData] = useState({
+  const [profileData, setProfileData] = useState<ProfileData>({
     header: '',
     logo: '',
     instagram: '',
@@ -12,10 +23,9 @@ const EditProfileButton: React.FC = () => {
     direction: '',
     whatsapp: ''
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [headerFile, setHeaderFile] = useState<File | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [headerPreview, setHeaderPreview] = useState<string | ArrayBuffer | null>(null);
@@ -42,7 +52,7 @@ const EditProfileButton: React.FC = () => {
     }
   }, [userId]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setProfileData((prevData) => ({
       ...prevData,
@@ -50,7 +60,7 @@ const EditProfileButton: React.FC = () => {
     }));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'header' | 'logo') => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'header' | 'logo'): void => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -70,48 +80,62 @@ const EditProfileButton: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    setModalContent('¿Estás seguro de que quieres guardar los cambios?');
     setIsModalOpen(true);
   };
 
-  const handleConfirm = async () => {
+  const handleConfirm = async (): Promise<void> => {
     try {
       let updatedProfileData = { ...profileData };
-      
+
       if (headerFile) {
         const headerUrl = await uploadFile(headerFile);
         updatedProfileData.header = headerUrl;
       }
-      
+
       if (logoFile) {
         const logoUrl = await uploadFile(logoFile);
         updatedProfileData.logo = logoUrl;
       }
 
-      await updateUser(userId, updatedProfileData);
-      setModalContent('¡Cambios guardados exitosamente!');
-      setTimeout(() => {
-        setIsModalOpen(false);
-      }, 3000); // Cierra el modal después de 2 segundos
+      if (userId) {
+        await updateUser(userId, updatedProfileData);
+      } else {
+        setError('Error: No se pudo obtener el ID del usuario.');
+      }
+
+      
+      
+      
+      Swal.fire({
+        title: "¡Actualizado!",
+        text: "El perfil se ha actualizado correctamente.",
+        icon: "success",
+        timer: 3000,
+        showConfirmButton: false
+      });
+      
+      setIsModalOpen(false);
+
+      setTimeout(() => window.location.reload(), 3000);
     } catch (err) {
       setError('Error al guardar los cambios');
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = (): void => {
     setIsModalOpen(false);
   };
 
-  if (loading) return <p>Cargando...</p>;
+  if (loading) return <Loader/>;
   if (error) return <p>{error}</p>;
 
   return (
     <div>
       <button
         onClick={() => setIsModalOpen(true)}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
+        className="bg-blue-500 xs:text-xs m-1 xl:text-md text-white px-4 py-2 rounded"
       >
         Editar Perfil
       </button>
@@ -132,6 +156,19 @@ const EditProfileButton: React.FC = () => {
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
+
+              <div className="mb-4">
+                <label htmlFor="instagram" className="block text-sm font-medium">Instagram:</label>
+                <input
+                  type="text"
+                  id="instagram"
+                  name="instagram"
+                  value={profileData.instagram}
+                  onChange={handleChange}
+                  className="border border-gray-300 p-2 rounded w-full"
+                />
+              </div>
+
               <div className="mb-4">
                 <label htmlFor="direction" className="block text-sm font-medium">Dirección:</label>
                 <input
@@ -143,8 +180,9 @@ const EditProfileButton: React.FC = () => {
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
+
               <div className="mb-4">
-                <label htmlFor="whatsapp" className="block text-sm font-medium">WhatsApp:</label>
+                <label htmlFor="whatsapp" className="block text-sm font-medium">WhatsApp:(ej +543442457109)</label>
                 <input
                   type="text"
                   id="whatsapp"
@@ -154,44 +192,43 @@ const EditProfileButton: React.FC = () => {
                   className="border border-gray-300 p-2 rounded w-full"
                 />
               </div>
+
               <div className="mb-4">
-                <label htmlFor="header" className="block text-sm font-medium">Header:</label>
+                <label className="block text-sm font-medium">Logo:(Recomendado 200x200px)</label>
                 <input
                   type="file"
-                  id="header"
-                  onChange={(e) => handleImageChange(e, 'header')}
-                  className="border border-gray-300 p-2 rounded w-full"
-                />
-                {headerPreview && (
-                  <img src={headerPreview as string} alt="Header Preview" className="mt-2 w-full h-32 object-cover" />
-                )}
-              </div>
-              <div className="mb-4">
-                <label htmlFor="logo" className="block text-sm font-medium">Logo:</label>
-                <input
-                  type="file"
-                  id="logo"
+                  accept="image/*"
                   onChange={(e) => handleImageChange(e, 'logo')}
-                  className="border border-gray-300 p-2 rounded w-full"
+                  className="mt-2"
                 />
-                {logoPreview && (
-                  <img src={logoPreview as string} alt="Logo Preview" className="mt-2 w-full h-32 object-cover" />
-                )}
+                {logoPreview && <img src={logoPreview as string} alt="Logo preview" className="mt-2 w-20 h-20 object-cover" />}
               </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Header:(Recomendado 1300x400px)</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageChange(e, 'header')}
+                  className="mt-2"
+                />
+                {headerPreview && <img src={headerPreview as string} alt="Header preview" className="mt-2 w-full h-20 object-cover" />}
+              </div>
+
               <div className="flex justify-end space-x-2">
-                <button
-                  type="submit"
-                  onClick={handleConfirm}
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                  Guardar cambios
-                </button>
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="bg-gray-500 text-white px-4 py-2 rounded"
+                  className="bg-red-500 text-white px-4 py-2 rounded"
                 >
                   Cancelar
+                </button>
+                <button
+                  type="submit"
+                  onClick={handleConfirm}
+                  className="bg-green-500 text-white px-4 py-2 rounded"
+                >
+                  Confirmar
                 </button>
               </div>
             </form>

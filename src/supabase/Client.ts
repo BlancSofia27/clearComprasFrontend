@@ -1,4 +1,6 @@
 // ./supabase/client.ts
+/// <reference types="vite/types/importMeta.d.ts" />
+
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 const supabaseUrl: string = import.meta.env.VITE_SUPABASE_URL;

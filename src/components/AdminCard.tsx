@@ -189,7 +189,9 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
         </Slider>
       </div>
       <div className="xl:p-4 xs:p-2 xl:text-md xs:text-sm xs:mt-3">
-        <div className="xl:h-14 xs:h-10 xl:text-lg font-bold text-center mt-2">{title}</div>
+      <div className="flex items-center xl:text-lg xs:text-sm font-semibold text-center justify-center h-12 w-full">
+  {title}
+</div>
         <p className="text-gray-600">${price}</p>
         <p className="xs:hidden xl:flex text-gray-600 ">{category}</p>
         <div className="mb-2">
@@ -298,7 +300,11 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
                 {sizes.map((size) => (
                   <button
                     key={size}
-                    onClick={() => handleSizeClick(size)}
+                    
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSizeClick(size);
+                    }}
                     className={`m-1 p-2 border rounded ${
                       selectedSizes.includes(size) ? 'bg-blue-500 text-white' : 'bg-white text-black'
                     }`}
@@ -310,14 +316,14 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
             </div>
             <button
               type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+              className="bg-blue-500 text-white px-4 py-2 rounded m-2"
             >
               Guardar Cambios
             </button>
             <button
               type="button"
               onClick={() => setModalIsOpen(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded"
+              className="bg-gray-500 text-white px-4 py-2 rounded m-2"
             >
               Cancelar
             </button>

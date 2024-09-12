@@ -111,7 +111,10 @@ const ProfilePostsList: React.FC<ProfilePostsListProps> = ({ userId }) => {
         {currentPosts.length > 0 ? (
           currentPosts.map((post) => <ProfileCard key={post.id} post={post} />)
         ) : (
-          <div className="p-20 text-center">No posts available</div>
+          <>
+          <div className="w-full text-end px-2 py-24 font-bold">No se encontraron</div>
+          <div className="w-full text-start py-24 font-bold">productos</div>
+          </>
         )}
       </div>
 
