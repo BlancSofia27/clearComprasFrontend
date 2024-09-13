@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import EditProfileButton from './Admin/EditProfileButton';
-import Loader from './Loader';
-import { getUserById } from '../supabaseApi';
+import EditProfileButton from './EditProfileButton';
+import Loader from '../Loader';
+import { getUserById } from '../../supabaseApi';
 
 interface User {
   userId: string;
@@ -87,7 +87,7 @@ const Profile: React.FC = () => {
         <p className='font-semibold py-1 xs:text-xs'>Email: {profile.email}</p>
         <p className='font-semibold py-1 xs:text-xs'>WhatsApp: +{profile.whatsapp}</p>
         <p className='font-semibold py-1 xs:text-xs'>Instagram: {profile.instagram}</p>
-        <EditProfileButton />
+        <EditProfileButton profileData={profile}/>
       </div>
     </div>
   );

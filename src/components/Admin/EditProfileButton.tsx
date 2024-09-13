@@ -42,7 +42,7 @@ const EditProfileButton: React.FC = () => {
           setHeaderPreview(data.header);
           setLogoPreview(data.logo);
         } catch (err) {
-          setError('Error al cargar los datos del perfil');
+          setError('Error loading profile data');
         } finally {
           setLoading(false);
         }
@@ -54,7 +54,7 @@ const EditProfileButton: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
-    setProfileData((prevData) => ({
+    setProfileData(prevData => ({
       ...prevData,
       [name]: value
     }));
@@ -82,12 +82,12 @@ const EditProfileButton: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
-    setIsModalOpen(true);
+    handleConfirm(); // Directly call the confirm function on submit
   };
 
   const handleConfirm = async (): Promise<void> => {
     try {
-      let updatedProfileData = { ...profileData };
+      const updatedProfileData = { ...profileData };
 
       if (headerFile) {
         const headerUrl = await uploadFile(headerFile);
@@ -102,51 +102,49 @@ const EditProfileButton: React.FC = () => {
       if (userId) {
         await updateUser(userId, updatedProfileData);
       } else {
-        setError('Error: No se pudo obtener el ID del usuario.');
+        setError('Error: User ID not found.');
+        return;
       }
 
-      
-      
-      
       Swal.fire({
-        title: "¡Actualizado!",
-        text: "El perfil se ha actualizado correctamente.",
+        title: "Updated!",
+        text: "Profile updated successfully.",
         icon: "success",
         timer: 3000,
         showConfirmButton: false
       });
-      
-      setIsModalOpen(false);
+
+      setIsModalOpen(false); // Close the modal after successful update
 
       setTimeout(() => window.location.reload(), 3000);
     } catch (err) {
-      setError('Error al guardar los cambios');
+      setError('Error saving changes');
     }
   };
 
   const handleCancel = (): void => {
-    setIsModalOpen(false);
+    setIsModalOpen(false); // Close the modal without saving changes
   };
 
-  if (loading) return <Loader/>;
+  if (loading) return <Loader />;
   if (error) return <p>{error}</p>;
 
   return (
     <div>
       <button
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => setIsModalOpen(true)} // Open modal on button click
         className="bg-blue-500 xs:text-xs m-1 xl:text-md text-white px-4 py-2 rounded"
       >
-        Editar Perfil
+        Edit Profile
       </button>
 
-      {isModalOpen && (
+      {isModalOpen && ( // Modal only renders if isModalOpen is true
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-            <h2 className="text-lg font-bold mb-4">Editar Perfil</h2>
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[330px] xs:w-[330px] xl:w-[800px] xl:h-[600px] overflow-y-auto mx-4">
+            <h2 className="text-lg font-bold mb-4">Edit Profile</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label htmlFor="businessName" className="block text-sm font-medium">Nombre del Negocio:</label>
+                <label htmlFor="businessName" className="block text-sm font-medium">Business Name:</label>
                 <input
                   type="text"
                   id="businessName"
@@ -170,7 +168,7 @@ const EditProfileButton: React.FC = () => {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="direction" className="block text-sm font-medium">Dirección:</label>
+                <label htmlFor="direction" className="block text-sm font-medium">Address:</label>
                 <input
                   type="text"
                   id="direction"
@@ -182,7 +180,7 @@ const EditProfileButton: React.FC = () => {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="whatsapp" className="block text-sm font-medium">WhatsApp:(ej +543442457109)</label>
+                <label htmlFor="whatsapp" className="block text-sm font-medium">WhatsApp:</label>
                 <input
                   type="text"
                   id="whatsapp"
@@ -194,7 +192,7 @@ const EditProfileButton: React.FC = () => {
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium">Logo:(Recomendado 200x200px)</label>
+                <label className="block text-sm font-medium">Logo (Recommended 200x200px):</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -205,7 +203,7 @@ const EditProfileButton: React.FC = () => {
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium">Header:(Recomendado 1300x400px)</label>
+                <label className="block text-sm font-medium">Header (Recommended 1300x400px):</label>
                 <input
                   type="file"
                   accept="image/*"
@@ -221,14 +219,13 @@ const EditProfileButton: React.FC = () => {
                   onClick={handleCancel}
                   className="bg-red-500 text-white px-4 py-2 rounded"
                 >
-                  Cancelar
+                  Cancel
                 </button>
                 <button
                   type="submit"
-                  onClick={handleConfirm}
                   className="bg-green-500 text-white px-4 py-2 rounded"
                 >
-                  Confirmar
+                  Confirm
                 </button>
               </div>
             </form>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import AdminPostsList from '../components/AdminPostsList';
-import ProfileAdmin from '../components/ProfileAdmin';
+import AdminPostsList from '../components/Admin/AdminPostsList';
+import ProfileAdmin from '../components/Admin/ProfileAdmin';
 
 
 const AdminPanel: React.FC = () => {

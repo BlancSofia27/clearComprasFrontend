@@ -35,7 +35,7 @@ const ProfileAuth: React.FC = () => {
 
   return (
     isAuthenticated && user && (
-      <div className="flex flex-row xs:w-[260px] xl:w-[360px] bg-celeste p-2 rounded-se-full text-white font-extralight">
+      <div className="flex flex-row xs:w-[280px] xl:w-[360px] bg-celeste p-2 rounded-se-full text-white font-extralight">
         <img 
           className="xl:w-11 xl:h-11 xs:h-8 xs:w-8 rounded-full"
           src={user.picture} 
@@ -46,7 +46,7 @@ const ProfileAuth: React.FC = () => {
           <h2 className="xl:text-md xs:text-xs">{user.email}</h2>
           <div className="flex items-center">
             <h1 className="xl:text-md xs:text-xs">ID: {user.sub}</h1>
-            <button onClick={copyToClipboard} className="xl:ml-2 xs:w-6 xl:w-9">
+            <button onClick={copyToClipboard} className="xl:ml-2 xs:w-5 xl:w-6">
               <img src={copy}
               className=""
               alt="copiar id" />

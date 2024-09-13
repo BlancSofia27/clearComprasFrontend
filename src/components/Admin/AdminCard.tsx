@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import Slider from "react-slick";
 import Swal from "sweetalert2";
-import { updatePost, deletePost } from "../supabaseApi"; // Asegúrate de importar las funciones desde el archivo correcto
+import { updatePost, deletePost } from "../../supabaseApi";
 
 interface MyAdminCard {
   post: {
@@ -49,6 +49,7 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
     "XL",
     "XXL",
     "34",
+    "35",
     "36",
     "37",
     "38",
@@ -56,7 +57,11 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
     "40",
     "41",
     "42",
+    "43",
+    "44",
+    "45",
   ];
+
   const categories = [
     "Remeras",
     "Polleras",
@@ -72,6 +77,7 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
     "Electronica",
     "Otros",
   ];
+
   const colors = [
     "Negro",
     "Blanco",
@@ -140,7 +146,7 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
   const handleDelete = async () => {
     try {
       const result = await Swal.fire({
-        title: "¿Queres Eliminar el Producto?",
+        title: "¿Quieres eliminar el producto?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -175,7 +181,7 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
 
   return (
     <div className="flex flex-col xl:w-[220px] xl:h-[510px] xs:w-[150px] xs:h-[300px] max-w-sm m-4 bg-white shadow-md rounded-md overflow-hidden">
-      <div className="relative">
+      <div className="relative group">
         <Slider {...settings}>
           {images.map((image, index) => (
             <div key={index}>
@@ -187,28 +193,7 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
             </div>
           ))}
         </Slider>
-      </div>
-      <div className="xl:p-4 xs:p-2 xl:text-md xs:text-sm xs:mt-3">
-      <div className="flex items-center xl:text-lg xs:text-sm font-semibold text-center justify-center h-12 w-full">
-  {title}
-</div>
-        <p className="text-gray-600">${price}</p>
-        <p className="xs:hidden xl:flex text-gray-600 ">{category}</p>
-        <div className="mb-2">
-          <p className="xs:hidden xl:flex text-gray-600 mb-2 ">Talle</p>
-          <div className="flex flex-wrap gap-2">
-            {size.map((s, index) => (
-              <span
-                key={index}
-                className="bg-gray-200 text-gray-700 px-2 py-1 rounded"
-              >
-                {s}
-              </span>
-            ))}
-          </div>
-        </div>
-        <p className="xs:hidden xl:flex text-gray-600">Color:{color}</p>
-        <div className="xs:text-xs xl:text-sm mt-2 flex flex-row justify-between">
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <button
             onClick={() => setModalIsOpen(true)}
             className="bg-blue-500 text-white xl:px-4 xl:py-1 xs:px-2 rounded mr-2"
@@ -217,11 +202,33 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
           </button>
           <button
             onClick={handleDelete}
-            className="bg-red-500 text-white xl:px-4 xl:py-1 xs:px-2  rounded"
+            className="bg-red-500 text-white xl:px-4 xl:py-1 xs:px-2 rounded"
           >
             Eliminar
           </button>
         </div>
+      </div>
+
+      <div className="xl:p-4 xs:p-2 xl:text-md xs:text-sm xs:mt-3">
+        <div className="flex items-center xl:text-lg xs:text-sm font-semibold text-center justify-center h-12 w-full">
+          {title}
+        </div>
+        <p className="text-gray-600">${price}</p>
+        <p className="xs:hidden xl:flex text-gray-600">{category}</p>
+        <div className="mb-2">
+          <p className="xs:hidden xl:flex text-gray-600 mb-2">Talle</p>
+          <div className="flex flex-row gap-2 xl:text-md xl:m-1 xs:text-xs overflow-y-hidden overflow-x-auto">
+            {size.map((s, index) => (
+              <span
+                key={index}
+                className="bg-gray-200 text-gray-700 xl:px-2 xl:py-1 rounded p-1 h-6 my-1"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
+        <p className="xs:hidden xl:flex text-gray-600">Color: {color}</p>
       </div>
 
       <Modal
@@ -264,9 +271,9 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
                 onChange={(e) => setEditedCategory(e.target.value)}
                 className="w-full mt-1 p-2 border border-gray-300 rounded"
               >
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
                   </option>
                 ))}
               </select>
@@ -294,39 +301,40 @@ const MyAdminCard: React.FC<MyAdminCard> = ({ post }) => {
                 ))}
               </select>
             </label>
-            <div className="mb-4">
-              <label className="block mb-2">Tamaños:</label>
-              <div className="flex flex-wrap">
-                {sizes.map((size) => (
+            <label className="block mb-2">
+              Talles:
+              <div className="flex flex-wrap mt-1">
+                {sizes.map((s) => (
                   <button
-                    key={size}
-                    
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleSizeClick(size);
-                    }}
-                    className={`m-1 p-2 border rounded ${
-                      selectedSizes.includes(size) ? 'bg-blue-500 text-white' : 'bg-white text-black'
-                    }`}
+                    key={s}
+                    type="button"
+                    className={`${
+                      selectedSizes.includes(s)
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200 text-gray-700"
+                    } px-2 py-1 rounded m-1`}
+                    onClick={() => handleSizeClick(s)}
                   >
-                    {size}
+                    {s}
                   </button>
                 ))}
               </div>
+            </label>
+            <div className="flex justify-end mt-4">
+              <button
+                type="button"
+                onClick={() => setModalIsOpen(false)}
+                className="mr-4 bg-gray-500 text-white px-4 py-2 rounded"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Guardar cambios
+              </button>
             </div>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded m-2"
-            >
-              Guardar Cambios
-            </button>
-            <button
-              type="button"
-              onClick={() => setModalIsOpen(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded m-2"
-            >
-              Cancelar
-            </button>
           </form>
         </div>
       </Modal>
