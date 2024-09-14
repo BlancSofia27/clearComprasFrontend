@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import Filters from "../../../../ComprasFront/src/components/Filters";
-import SearchBar from "../../../../ComprasFront/src/components/SearchBar";
+import Filters from "../Filters";
+import SearchBar from "../SearchBar";
 import ReactPaginate from "react-paginate";
-import AdminCard from "../../../../ComprasFront/src/components/AdminCard";
-import { getAllPosts } from "../../../../ComprasFront/src/supabaseApi"; // Importa la función correcta
+import AdminCard from "./AdminCard";
+import { getAllPosts } from "../../supabaseApi"; // Importa la función correcta
 
 type SortOrder = "asc" | "desc";
 
@@ -96,11 +96,12 @@ const AdminPostsList: React.FC = () => {
   const currentPosts = filteredPosts.slice(offset, offset + postsPerPage);
 
   return (
-    <div className="bg-gray-100 w-full flex flex-col">
+    <div className="bg-gray-100 flex flex-col">
       <SearchBar setSearchTerm={setSearchTerm} />
       <div className="flex flex-row w-auto">
         <Filters setFilters={setFilters} />
       </div>
+      
       <div className="justify-center card-list grid sm:grid-cols-3 xs:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 xl:p-4 xs:p-1">
         {currentPosts.length > 0 ? (
           currentPosts.map((post) => <AdminCard key={post.id} post={post} />)

@@ -91,7 +91,7 @@ const PostsList: React.FC = () => {
       <div className="flex flex-row w-auto">
         <Filters setFilters={setFilters} />
       </div>
-      <div className="justify-center card-list grid sm:grid-cols-3 xs:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:gap-4 xl:p-4 xs:p-1">
+      <div className="justify-center card-list grid sm:grid-cols-3 xs:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 xl:p-4 xs:p-1">
         {currentPosts.length > 0 ? (
           currentPosts.map((post) => <PostCard key={post.id} post={post} />)
         ) : (<>

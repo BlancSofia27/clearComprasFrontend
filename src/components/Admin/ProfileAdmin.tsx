@@ -60,14 +60,14 @@ const Profile: React.FC = () => {
   }
 
   return (
-    <div className="relative max-w-full mx-auto bg-slate text-gray-800 shadow-md rounded-lg">
+    <div className="relative max-w-full mx-auto bg-slate text-gray-800 shadow-md">
       {/* Header */}
       <div className="relative w-full xl:h-[400px] xs:h-[150px] ">
         <img
           src={profile.header}
           alt="Header"
           width={223} height={400}
-          className="w-full h-full object-cover rounded-t-lg"
+          className="w-full h-full object-cover "
         />
         <div className="absolute inset-0 flex justify-start mt-[70px]">
           <img

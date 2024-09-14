@@ -55,7 +55,7 @@ const Profile: React.FC = () => {
 
   if (error) {
     return (
-      <div className="text-center text-red-500">
+      <div className="flex text-center text-red-500">
         {error}
         <button
           onClick={() => navigate("/")}
@@ -73,29 +73,29 @@ const Profile: React.FC = () => {
 
   return (
     <>
+      <div className="relative max-w-full mx-auto bg-gray-100 shadow-md font-semibold">
+        <div className=" relative w-full xl:h-[400px] md:h-[300px] xs:h-[200px]">
       <Link to="/">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 xl:px-4 xl:mx-4 xs:text-xs xs:p-2 mx-2 rounded">
+        <button className="justify-start bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 xl:px-7 xl:mx-4 xs:text-xs xs:p-2 mx-2 rounded">
           Inicio
         </button>
       </Link>
-      <div className="relative max-w-full mx-auto bg-white shadow-md font-semibold">
-        <div className="p-4 relative w-full xl:h-[400px] md:h-[300px] xs:h-[200px]">
           <img
             src={user.header}
             alt="Header"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 flex xl:justify-start xs:justify-center xs:mt-[80px]  xl:mt-[100px]">
+          <div className="absolute inset-0 flex xl:justify-start xs:justify-center xs:mt-[100px]  xl:mt-[100px]">
           <img
             src={user.logo}
             alt="Logo"
             className="xl:w-[200px] xl:h-[200px] xs:w-[150px]   xs:h-[150px]  xl:ml-12 rounded-full border-2 border-gray-300"
-            style={{ marginTop: 'calc(13% - 2rem)' }}
+            style={{ marginTop: 'calc(16% - 2rem)' }}
           />
         </div>
         </div>
-        <div className="p-6 xl:mt-8 md:mt-12 font-bold">
-          <h1 className="xl:text-3xl xs:text-md text-zinc-800 mt-9">
+        <div className="text-gray-600 xl:px-2 xl:pt-24 xs:px-3 xs:pt-20 xs:pb-2 font-bold">
+          <h1 className="xl:text-3xl xs:text-md ">
             {user.businessName}
           </h1>
           {user.direction ? (
