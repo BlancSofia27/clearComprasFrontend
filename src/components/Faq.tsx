@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-
+import { useAuth0 } from '@auth0/auth0-react';
 interface FAQ {
   question: string;
   answer: string;
 }
+
+
 const faqs: FAQ[] = [
+
     {
       question: '¿Cómo puedo publicar mi catálogo?',
       answer: 'Para publicar tu catálogo, debes registrarte en la web con un correo o tu Facebook, crear una cuenta, y contactarte al número +54 9 11 66941550 por WhatsApp. Ahí vas a enviar los datos de tu negocio. Te recomendamos que uses un email/Facebook que le pertenezca al negocio, no uno personal.'
@@ -46,69 +49,78 @@ const faqs: FAQ[] = [
 
 const FAQComponent: React.FC = () => {
   const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
-
+  const {isAuthenticated} = useAuth0();
   const toggleAnswer = (index: number) => {
     setSelectedQuestion(selectedQuestion === index ? null : index);
   };
 
   return (
-    <div className="w-full mx-auto justify-center h-full font-normal bg-gray-100 shadow-2xl text-gray-700">
-      <h1 className="text-2xl font-bold text-center mb-6 p-5 bg-gradient-to-r from-blue-300 to-celeste w-full text-white">Preguntas Frecuentes</h1>
-      <div className="space-y-4 xl:px-16 xs:px-3 ">
-        {faqs.map((faq, index) => (
-          <div key={index} className="border-b-2 pb-2">
-            <h2
-              className="text-xl  cursor-pointer flex justify-between"
-              onClick={() => toggleAnswer(index)}
-            >
-              {faq.question}
-              <span>{selectedQuestion === index ? <button
-  className="group cursor-pointer outline-none hover:rotate-90 duration-300"
-  title="Subtract"
->
-  <svg
-    className="stroke-blue-300 fill-none group-hover:fill-blue-500 group-active:stroke-blue-400 group-active:fill-blue-300 group-active:duration-0 duration-300"
-    viewBox="0 0 24 24"
-    height="50px"
-    width="50px"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      stroke-width="1.5"
-      d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
-    ></path>
-   
-    <path stroke-width="1.5" d="M8 12H16"></path>
-  </svg>
-</button> : /* From Uiverse.io by mRcOol7 */ 
-<button
-  className="group cursor-pointer outline-none hover:rotate-90 duration-300"
-  title="Add New"
->
-  <svg
-    className="stroke-blue-300 fill-none group-hover:fill-blue-500 group-active:stroke-blue-400 group-active:fill-blue-300 group-active:duration-0 duration-300"
-    viewBox="0 0 24 24"
-    height="50px"
-    width="50px"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      stroke-width="1.5"
-      d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
-    ></path>
-    <path stroke-width="1.5" d="M8 12H16"></path>
-    <path stroke-width="1.5" d="M12 16V8"></path>
-  </svg>
-</button>
-}</span>
-            </h2>
-            {selectedQuestion === index && (
-              <p className="mt-2 ">{faq.answer}</p>
-            )}
+    <>
+      {!isAuthenticated && (
+        <div className="w-full mx-auto justify-center h-full font-normal bg-gray-100 shadow-2xl text-gray-700">
+          <h1 className="text-2xl font-bold text-center mb-6 p-5 bg-gradient-to-r from-blue-300 to-celeste w-full text-white">
+            Preguntas Frecuentes
+          </h1>
+          <div className="space-y-4 xl:px-16 xs:px-3">
+            {faqs.map((faq, index) => (
+              <div key={index} className="border-b-2 pb-2">
+                <h2
+                  className="text-xl cursor-pointer flex justify-between"
+                  onClick={() => toggleAnswer(index)}
+                >
+                  {faq.question}
+                  <span>
+                    {selectedQuestion === index ? (
+                      <button
+                        className="group cursor-pointer outline-none hover:rotate-90 duration-300"
+                        title="Subtract"
+                      >
+                        <svg
+                          className="stroke-blue-300 fill-none group-hover:fill-blue-500 group-active:stroke-blue-400 group-active:fill-blue-300 group-active:duration-0 duration-300"
+                          viewBox="0 0 24 24"
+                          height="50px"
+                          width="50px"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeWidth="1.5"
+                            d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                          />
+                          <path strokeWidth="1.5" d="M8 12H16" />
+                        </svg>
+                      </button>
+                    ) : (
+                      <button
+                        className="group cursor-pointer outline-none hover:rotate-90 duration-300"
+                        title="Add New"
+                      >
+                        <svg
+                          className="stroke-blue-300 fill-none group-hover:fill-blue-500 group-active:stroke-blue-400 group-active:fill-blue-300 group-active:duration-0 duration-300"
+                          viewBox="0 0 24 24"
+                          height="50px"
+                          width="50px"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeWidth="1.5"
+                            d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                          />
+                          <path strokeWidth="1.5" d="M8 12H16" />
+                          <path strokeWidth="1.5" d="M12 16V8" />
+                        </svg>
+                      </button>
+                    )}
+                  </span>
+                </h2>
+                {selectedQuestion === index && (
+                  <p className="mt-2">{faq.answer}</p>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 

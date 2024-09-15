@@ -31,9 +31,9 @@ const Inicio: React.FC = () => {
   }, [user]);
 
   return (
-    <div className='bg-slate justify-center items-center'>
+    <div className='xl:bg-slate  justify-center items-center'>
         <div className="xl:flex xl:flex-row xl:justify-between xs:flex-col">
-      <div className="flex flex-row align-center justify-between mx-2">
+      <div className="flex flex-row  align-center justify-between mx-2">
         <ProfileAuth />
         
         <ToastContainer/>
