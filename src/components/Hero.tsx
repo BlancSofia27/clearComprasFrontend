@@ -43,7 +43,7 @@ const Hero = React.forwardRef<HTMLElement>(( _,ref) => {
 
   return (
     <section ref={ref}>
-      <div className="relative w-full xl:h-96 xs:h-[100px]">
+      <div className="relative w-full xl:h-[450px] xs:h-[130px]">
         <img
           src={header}
           alt="Hero Background"

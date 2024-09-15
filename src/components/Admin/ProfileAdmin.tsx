@@ -87,7 +87,7 @@ const Profile: React.FC = () => {
         <p className='font-semibold py-1 xs:text-xs'>Email: {profile.email}</p>
         <p className='font-semibold py-1 xs:text-xs'>WhatsApp: +{profile.whatsapp}</p>
         <p className='font-semibold py-1 xs:text-xs'>Instagram: {profile.instagram}</p>
-        <EditProfileButton profileData={profile}/>
+        <EditProfileButton />
       </div>
     </div>
   );

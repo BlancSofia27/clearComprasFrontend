@@ -39,7 +39,7 @@ const AdminPostsList: React.FC = () => {
     sortOrder: "asc",
   });
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const postsPerPage = 10;
+  const postsPerPage = 40;
 
   useEffect(() => {
     if (isAuthenticated && user?.sub) {

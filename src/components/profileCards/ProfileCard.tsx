@@ -77,13 +77,13 @@ const MyCard: React.FC<MyProfileCard> = ({ post }) => {
         </button>
       </div>
       <div className="xl:p-4 xs:p-2 xl:text-md xs:text-sm xs:mt-3">
-        <div className="flex items-center xl:text-lg xs:text-sm font-semibold text-center justify-center h-16 w-full">
+        <div className="flex items-center xl:text-lg xs:text-sm font-semibold text-center justify-center x:h-16 xs:h-12 w-full">
           {title}
         </div>
-        <div className="flex xs:flex-row justify-between">
+        <div className="flex xl:flex-row xs:flex-col justify-between">
           <div className="flex flex-col">
             <p className="text-gray-600 xl:text-lg">${price}</p>
-            <p className="xs:hidden xl:flex text-gray-600 mb-2">Talle</p>
+            <p className="xs:hidden xl:flex text-gray-600 mb-2">Talles</p>
           </div>
           <p className="text-gray-600 xs:text-xs xl:text-lg">{brand}</p>
         </div>

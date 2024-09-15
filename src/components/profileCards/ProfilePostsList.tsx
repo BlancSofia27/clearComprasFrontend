@@ -43,7 +43,7 @@ const ProfilePostsList: React.FC<ProfilePostsListProps> = ({ userId }) => {
     sortOrder: "asc",
   });
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const postsPerPage = 10;
+  const postsPerPage = 40;
 
   useEffect(() => {
     const fetchPosts = async () => {

@@ -7,7 +7,7 @@ import { insertPost } from "../supabaseApi"; // Importa la función insertPost
 
 
 const sizes = [
-  "Único", "S", "M", "L", "XL", "XXL", "34", "36", "37", "38", "39", "40", "41", "42",
+  "Único", "S", "M", "L", "XL", "XXL", "34","35", "36", "37", "38", "39", "40", "41", "42","43","44","45"
 ];
 const categories = [
   "Remeras", "Polleras", "Top Casual", "Jeans", "Pantalones", "Camperas y Buzos", "Calzado", "Bikinis", "Deportivo", "Noche y Fiesta","Marroquineria y Accesorios" ,"Electronica", "Otros",
@@ -166,9 +166,9 @@ const PostForm: React.FC = () => {
   return (
     <>
       <Link to="/AdminPanel">
-        <button className="bg-celeste text-white p-5">Volver al Panel</button>
+        <button className="rounded-ee-xl bg-blue-500 text-white p-5">Volver al Panel</button>
       </Link>
-      <div className="max-w-lg mx-auto p-4 bg-slate shadow-md rounded-lg my-6">
+      <div className="text-gray-600 max-w-lg mx-auto p-4 bg-slate shadow-md rounded-lg my-6">
         <h2 className="text-2xl font-bold mb-4 py-6 text-center">
           Nueva publicación
         </h2>
@@ -176,7 +176,7 @@ const PostForm: React.FC = () => {
           {/* Campo de Título */}
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block  text-sm font-bold mb-2"
               htmlFor="title"
             >
               Título
@@ -194,7 +194,7 @@ const PostForm: React.FC = () => {
           {/* Campo de Precio */}
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block  text-sm font-bold mb-2"
               htmlFor="price"
             >
               Precio
@@ -212,7 +212,7 @@ const PostForm: React.FC = () => {
           {/* Campo de Imagen */}
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block  text-sm font-bold mb-2"
               htmlFor="imageUrl"
             >
               Imagen 1
@@ -238,7 +238,7 @@ const PostForm: React.FC = () => {
           {/* Campo de Imagen Adicional 1 */}
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block  text-sm font-bold mb-2"
               htmlFor="imageUrl1"
             >
               Imagen 2
@@ -263,7 +263,7 @@ const PostForm: React.FC = () => {
           {/* Campo de Imagen Adicional 2 */}
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block  text-sm font-bold mb-2"
               htmlFor="imageUrl2"
             >
               Imagen 3
@@ -288,7 +288,7 @@ const PostForm: React.FC = () => {
           {/* Campo de Talles */}
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block  text-sm font-bold mb-2"
               htmlFor="size"
             >
               Talles
@@ -314,7 +314,7 @@ const PostForm: React.FC = () => {
           {/* Campo de Categoría */}
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block  text-sm font-bold mb-2"
               htmlFor="category"
             >
               Categoría
@@ -340,7 +340,7 @@ const PostForm: React.FC = () => {
           {/* Campo de Marca */}
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block  text-sm font-bold mb-2"
               htmlFor="brand"
             >
               Marca
@@ -358,7 +358,7 @@ const PostForm: React.FC = () => {
           {/* Campo de Color */}
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block  text-sm font-bold mb-2"
               htmlFor="color"
             >
               Color

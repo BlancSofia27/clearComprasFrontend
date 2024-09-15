@@ -107,8 +107,8 @@ const EditProfileButton: React.FC = () => {
       }
 
       Swal.fire({
-        title: "Updated!",
-        text: "Profile updated successfully.",
+        title: "Actualizado!",
+        text: "Perfil actualizado correctamente.",
         icon: "success",
         timer: 3000,
         showConfirmButton: false

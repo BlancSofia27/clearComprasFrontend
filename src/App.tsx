@@ -10,6 +10,7 @@ import AdminPanel from "./views/AdminPanel"
 import PostForm from "./views/postForm"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Profile from "./views/Profile"
+import FAQComponent from "./components/Faq"
 
 
 
@@ -21,11 +22,12 @@ const App: React.FC = () => {
           {/* Define la ruta principal */}
           <Route path="/" element={<Inicio />} />
             <Route path="/profile/:userId" element={<Profile />} />
+            <Route path="/PreguntasFrecuentes" element={<FAQComponent/>}/>
           {/*otras rutas */}
           <Route element={<ProtectedRoute />}>
+          </Route>
             <Route path="/adminPanel" element={<AdminPanel />} />
             <Route path="/NewPublic" element={<PostForm />} />
-          </Route>
           {/* Redirecciona rutas no válidas al inicio */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
