@@ -2,7 +2,19 @@ import React, { useState, useEffect } from 'react';
 
 // Opciones de color y categoría (definidos estáticamente)
 const categories = ["Remeras","Polleras", "Top Casual", "Jeans", "Pantalones", "Camperas y Buzos", "Zapatos", "Bikinis", "Deportivo", "Noche y Fiesta","Marroquineria y Accesorios", "Electronica", "Otros"];
-const colors = ["Negro", "Blanco", "Rojo", "Azul", "Rosa", "Marron", "Verde","Violeta"];
+const colors = [
+  "Negro",
+  "Blanco",
+  "Rojo",
+  "Azul",
+  "Rosa",
+  "Marron",
+  "Verde",
+  "Violeta",
+  "Naranja",
+  "Amarrillo",
+  "Gris",
+]
 
 interface FiltersProps {
   setFilters: React.Dispatch<React.SetStateAction<{ category: string; color: string; sortOrder: 'asc' | 'desc'; }>>;

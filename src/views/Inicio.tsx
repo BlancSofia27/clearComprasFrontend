@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import { getUserById } from "../supabaseApi";
 
 const Inicio: React.FC = () => {
-  const { user } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -38,6 +38,7 @@ const Inicio: React.FC = () => {
         
         <ToastContainer/>
         <SesionButton/>
+        {!isAuthenticated && (
         <a
   href='/PreguntasFrecuentes'
   className="flex justify-center xs:p-1 xs:m-1 xs:h-12 xs:w-12 xl:w-[300px]  xl:gap-3 xl:m-2 text-white items-center mx-auto shadow-xl text-sm md:text-lg bg-blue-500 backdrop-blur-md lg:font-semibold isolation-auto  before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-blue-300 hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-3 md:px-4 py-2 overflow-hidden border-2 rounded-full group"
@@ -58,7 +59,7 @@ const Inicio: React.FC = () => {
     <path d="M9 9a3 3 0 1 1 6 0c0 2-3 3-3 3"></path>
     <line x1="12" y1="17" x2="12" y2="17"></line>
   </svg>
-</a>
+</a> )}
 
       </div>
         {isAdmin && <PanelButton />}

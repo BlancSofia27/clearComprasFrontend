@@ -1,23 +1,61 @@
-import React, { useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { uploadFile } from "../firebase/config";
-import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
-import { insertPost } from "../supabaseApi"; // Importa la función insertPost
-
+import React, { useState } from "react"
+import { useAuth0 } from "@auth0/auth0-react"
+import { uploadFile } from "../firebase/config"
+import { Link } from "react-router-dom"
+import Swal from "sweetalert2"
+import { insertPost } from "../supabaseApi" // Importa la función insertPost
 
 const sizes = [
-  "Único", "S", "M", "L", "XL", "XXL", "34","35", "36", "37", "38", "39", "40", "41", "42","43","44","45"
-];
+  "Único",
+  "S",
+  "M",
+  "L",
+  "XL",
+  "XXL",
+  "34",
+  "35",
+  "36",
+  "37",
+  "38",
+  "39",
+  "40",
+  "41",
+  "42",
+  "43",
+  "44",
+  "45",
+]
 const categories = [
-  "Remeras", "Polleras", "Top Casual", "Jeans", "Pantalones", "Camperas y Buzos", "Calzado", "Bikinis", "Deportivo", "Noche y Fiesta","Marroquineria y Accesorios" ,"Electronica", "Otros",
-];
+  "Remeras",
+  "Polleras",
+  "Top Casual",
+  "Jeans",
+  "Pantalones",
+  "Camperas y Buzos",
+  "Calzado",
+  "Bikinis",
+  "Deportivo",
+  "Noche y Fiesta",
+  "Marroquineria y Accesorios",
+  "Electronica",
+  "Otros",
+]
 const colors = [
-  "Negro", "Blanco", "Rojo", "Azul", "Rosa", "Marron", "Verde", "Violeta",
-];
+  "Negro",
+  "Blanco",
+  "Rojo",
+  "Azul",
+  "Rosa",
+  "Marron",
+  "Verde",
+  "Violeta",
+  "Naranja",
+  "Amarrillo",
+  "Gris",
+]
 
 const PostForm: React.FC = () => {
-  const { user, isAuthenticated } = useAuth0();
+  const { user, isAuthenticated } = useAuth0()
   const [formData, setFormData] = useState({
     title: "",
     price: 0,
@@ -28,24 +66,24 @@ const PostForm: React.FC = () => {
     category: "" as string,
     brand: "",
     color: "" as string,
-  });
+  })
   const [imagePreviews, setImagePreviews] = useState({
     imageUrl: "" as string,
     imageUrl1: "" as string,
     imageUrl2: "" as string,
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleSizeClick = (size: string) => {
     setFormData((prevData) => ({
@@ -53,28 +91,28 @@ const PostForm: React.FC = () => {
       size: prevData.size.includes(size)
         ? prevData.size.filter((s) => s !== size)
         : [...prevData.size, size],
-    }));
-  };
+    }))
+  }
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     fieldName: "imageUrl" | "imageUrl1" | "imageUrl2"
   ) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
       setFormData((prevData) => ({
         ...prevData,
         [fieldName]: file, // Store the file object
-      }));
+      }))
 
       // Generate a preview URL for the image
-      const fileURL = URL.createObjectURL(file);
+      const fileURL = URL.createObjectURL(file)
       setImagePreviews((prevPreviews) => ({
         ...prevPreviews,
         [fieldName]: fileURL,
-      }));
+      }))
     }
-  };
+  }
 
   const uploadImagesAndSubmit = async () => {
     try {
@@ -87,69 +125,67 @@ const PostForm: React.FC = () => {
           .map(async ([key, file]) => {
             // Ensure file is of type File
             if (file instanceof File) {
-              const url = await uploadFile(file);
-              console.log(`URL de ${key}:`, url);
-              return { [key]: url };
+              const url = await uploadFile(file)
+              console.log(`URL de ${key}:`, url)
+              return { [key]: url }
             }
-            return { [key]: "" }; // Default to empty string if not a File
+            return { [key]: "" } // Default to empty string if not a File
           })
-      );
+      )
 
       // Update formData with image URLs
       const updatedFormData = urls.reduce(
         (acc, curr) => ({ ...acc, ...curr }),
         formData
-      );
+      )
 
-      return updatedFormData;
+      return updatedFormData
     } catch (uploadError) {
-      console.error("Error uploading images:", uploadError);
-      setError("Error uploading images");
-      throw uploadError;
+      console.error("Error uploading images:", uploadError)
+      setError("Error uploading images")
+      throw uploadError
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!isAuthenticated || !user) {
       alert(
         "No estás autenticado o no se pudo obtener la información del usuario."
-      );
-      return;
+      )
+      return
     }
 
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
 
     try {
-      const updatedFormData = await uploadImagesAndSubmit();
+      const updatedFormData = await uploadImagesAndSubmit()
 
       const postData = {
         ...updatedFormData,
         userId: user.sub,
-       
+
         price: Number(updatedFormData.price), // Convertir el precio a número
-      };
+      }
 
-      
-      console.log('Datos enviados a Supabase:', postData);
+      console.log("Datos enviados a Supabase:", postData)
 
-      const response = await insertPost(postData); // Usa la función insertPost
+      const response = await insertPost(postData) // Usa la función insertPost
 
-
-      console.log("Post creado:", response);
+      console.log("Post creado:", response)
       Swal.fire({
         position: "center",
         icon: "success",
         title: "Publicación subida con éxito",
         showConfirmButton: false,
         timer: 1500,
-      });
-      setTimeout(() => window.location.reload(), 3000);
+      })
+      setTimeout(() => window.location.reload(), 3000)
     } catch (error) {
-      console.error("Error al crear la publicación:", error);
-      setError("Ocurrió un error al crear la publicación. Inténtalo de nuevo.");
+      console.error("Error al crear la publicación:", error)
+      setError("Ocurrió un error al crear la publicación. Inténtalo de nuevo.")
       Swal.fire({
         position: "top-end",
         icon: "error",
@@ -157,16 +193,18 @@ const PostForm: React.FC = () => {
           "Ocurrió un error al crear tu publicación, contacta con el soporte",
         showConfirmButton: false,
         timer: 1500,
-      });
+      })
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <>
       <Link to="/AdminPanel">
-        <button className="rounded-ee-xl bg-blue-500 text-white p-5">Volver al Panel</button>
+        <button className="rounded-ee-xl bg-blue-500 text-white p-5">
+          Volver al Panel
+        </button>
       </Link>
       <div className="text-gray-600 max-w-lg mx-auto p-4 bg-slate shadow-md rounded-lg my-6">
         <h2 className="text-2xl font-bold mb-4 py-6 text-center">
@@ -175,10 +213,7 @@ const PostForm: React.FC = () => {
         <form onSubmit={handleSubmit}>
           {/* Campo de Título */}
           <div className="mb-4">
-            <label
-              className="block  text-sm font-bold mb-2"
-              htmlFor="title"
-            >
+            <label className="block  text-sm font-bold mb-2" htmlFor="title">
               Título
             </label>
             <input
@@ -193,10 +228,7 @@ const PostForm: React.FC = () => {
 
           {/* Campo de Precio */}
           <div className="mb-4">
-            <label
-              className="block  text-sm font-bold mb-2"
-              htmlFor="price"
-            >
+            <label className="block  text-sm font-bold mb-2" htmlFor="price">
               Precio
             </label>
             <input
@@ -211,10 +243,7 @@ const PostForm: React.FC = () => {
 
           {/* Campo de Imagen */}
           <div className="mb-4">
-            <label
-              className="block  text-sm font-bold mb-2"
-              htmlFor="imageUrl"
-            >
+            <label className="block  text-sm font-bold mb-2" htmlFor="imageUrl">
               Imagen 1
             </label>
             <input
@@ -287,10 +316,7 @@ const PostForm: React.FC = () => {
 
           {/* Campo de Talles */}
           <div className="mb-4">
-            <label
-              className="block  text-sm font-bold mb-2"
-              htmlFor="size"
-            >
+            <label className="block  text-sm font-bold mb-2" htmlFor="size">
               Talles
             </label>
             <div className="flex flex-wrap">
@@ -313,10 +339,7 @@ const PostForm: React.FC = () => {
 
           {/* Campo de Categoría */}
           <div className="mb-4">
-            <label
-              className="block  text-sm font-bold mb-2"
-              htmlFor="category"
-            >
+            <label className="block  text-sm font-bold mb-2" htmlFor="category">
               Categoría
             </label>
             <select
@@ -339,10 +362,7 @@ const PostForm: React.FC = () => {
 
           {/* Campo de Marca */}
           <div className="mb-4">
-            <label
-              className="block  text-sm font-bold mb-2"
-              htmlFor="brand"
-            >
+            <label className="block  text-sm font-bold mb-2" htmlFor="brand">
               Marca
             </label>
             <input
@@ -357,10 +377,7 @@ const PostForm: React.FC = () => {
 
           {/* Campo de Color */}
           <div className="mb-4">
-            <label
-              className="block  text-sm font-bold mb-2"
-              htmlFor="color"
-            >
+            <label className="block  text-sm font-bold mb-2" htmlFor="color">
               Color
             </label>
             <select
@@ -401,7 +418,7 @@ const PostForm: React.FC = () => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default PostForm;
+export default PostForm

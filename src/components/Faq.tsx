@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+
 interface FAQ {
   question: string;
   answer: string;
@@ -49,14 +49,14 @@ const faqs: FAQ[] = [
 
 const FAQComponent: React.FC = () => {
   const [selectedQuestion, setSelectedQuestion] = useState<number | null>(null);
-  const {isAuthenticated} = useAuth0();
+
   const toggleAnswer = (index: number) => {
     setSelectedQuestion(selectedQuestion === index ? null : index);
   };
 
   return (
     <>
-      {!isAuthenticated && (
+      
         <div className="w-full mx-auto justify-center h-full font-normal bg-gray-100 shadow-2xl text-gray-700">
           <h1 className="text-2xl font-bold text-center mb-6 p-5 bg-gradient-to-r from-blue-300 to-celeste w-full text-white">
             Preguntas Frecuentes
@@ -119,7 +119,7 @@ const FAQComponent: React.FC = () => {
             ))}
           </div>
         </div>
-      )}
+     
     </>
   );
 };
